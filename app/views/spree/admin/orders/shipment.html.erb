@@ -1,0 +1,66 @@
+<%= render "order_actions", order: @order, events: @order_events %>
+
+<%= render "spree/admin/shared/order_tabs", current: :shipments %>
+
+<%= content_for :page_title do %>
+	/ Dispatch <%= @shipment.number %>
+<% end %>
+
+<%= render "spree/admin/shared/error_messages", target: @shipment %>
+
+<div class="panel panel-default">
+	<div class="panel-heading stock-location no-borderb">
+		<h1 class="panel-title">From <%= @shipment.stock_location.name %></h1>
+	</div>
+
+	<table class="table table-bordered stock-contents">
+		<thead>
+			<th>Description</th>
+			<th width="15%" class="text-center">Price</th>
+			<th width="15%" class="text-center">Quantity</th>
+			<th width="15%" class="text-center">Total</th>
+		</thead>
+
+		<tbody>
+			<% @shipment.manifest.each do |item| %>
+				<tr class="stock-item">
+					<td>
+						<%= item.variant.name %><br /><%= "(#{variant_options(item.variant)})" if item.variant.option_values.any? %>
+						<% if item.variant.sku.present? %>
+							<strong><%= Spree.t(:sku) %>:</strong> <%= item.variant.sku %>
+						<% end %>
+					</td>
+					<td class="text-center"><%= item.line_item.single_money %></td>
+					<td class="text-center"><%= item.line_item.quantity %></td>
+					<td class="text-center"><%= item.line_item.display_price %></td>
+				</tr>
+			<% end %>
+		</tbody>
+	</table>
+</div>
+
+<%= form_for @shipment, url: admin_order_dispatch_shipment_path(@order, @shipment), method: :post do |f| %>
+	<%= f.field_container :weight, class: ["form-group"] do %>
+		<%= f.label :weight %>
+		<%= f.number_field :weight, class: "form-control" %>
+		<%= error_message_on :shipment, :weight %>
+	<% end %>
+	<%= f.field_container :width, class: ["form-group"] do %>
+		<%= f.label :width %>
+		<%= f.number_field :width, class: "form-control" %>
+		<%= error_message_on :shipment, :width %>
+	<% end %>
+	<%= f.field_container :height, class: ["form-group"] do %>
+		<%= f.label :height %>
+		<%= f.number_field :height, class: "form-control" %>
+		<%= error_message_on :shipment, :height %>
+	<% end %>
+	<%= f.field_container :depth, class: ["form-group"] do %>
+		<%= f.label :depth %>
+		<%= f.number_field :depth, class: "form-control" %>
+		<%= error_message_on :shipment, :depth %>
+	<% end %>
+	<div class="form-actions">
+		<%= f.submit "Ship package", class: "btn btn-primary" %>
+	</div>
+<% end %>

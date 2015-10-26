@@ -11,6 +11,19 @@ module Spree
       class Base < ShippingCalculator
         include ActiveShipping
 
+        LineItemWeightPackageStub = Struct.new :country, :content do
+          def stub_to_self
+            self
+          end
+
+          alias_method :order, :stub_to_self
+          alias_method :ship_address, :stub_to_self
+
+          def contents
+            [content]
+          end
+        end
+
         def self.service_name
           self.description
         end
@@ -65,6 +78,48 @@ module Spree
           return nil if timings_result.nil? || !timings_result.is_a?(Hash) || timings_result.empty?
           return timings_result[self.description]
 
+        end
+
+        # Generates an array of Package objects based on the quantities and weights of the variants in the line items
+        def packages(package)
+          units = Spree::ActiveShipping::Config[:units].to_sym
+          packages = []
+          weights = convert_package_to_weights_array(package)
+          max_weight = get_max_weight(package)
+          dimensions = convert_package_to_dimensions_array(package)
+          item_specific_packages = convert_package_to_item_packages_array(package)
+          value = package.to_shipment.item_cost
+          currency = package.currency
+
+          if max_weight <= 0
+            packages << ::ActiveShipping::Package.new(weights.sum, dimensions, units: units, value: value, currency: currency)
+          else
+            package_weight = 0
+            weights.each do |content_weight|
+              if package_weight + content_weight <= max_weight
+                package_weight += content_weight
+              else
+                packages << ::ActiveShipping::Package.new(package_weight, dimensions, units: units, value: value, currency: currency)
+                package_weight = content_weight
+              end
+            end
+            packages << ::ActiveShipping::Package.new(package_weight, dimensions, units: units, value: value, currency: currency) if package_weight > 0
+          end
+
+          item_specific_packages.each do |package|
+            packages << ::ActiveShipping::Package.new(package.at(0), [package.at(1), package.at(2), package.at(3)], units: :imperial, value: value, currency: currency)
+          end
+
+          packages
+        end
+
+        def line_items(line_items)
+          line_items.map do |li|
+            package_stub = LineItemWeightPackageStub.new li.order.ship_address.country, li
+            weight = convert_package_to_weights_array(package_stub).first
+
+            ::ActiveShipping::PackageItem.new(li.name, weight, li.amount, li.quantity)
+          end
         end
 
         protected
@@ -165,7 +220,7 @@ module Spree
             if max_weight <= 0 || item_weight < max_weight
               item_weight
             else
-              raise Spree::ShippingError.new("#{I18n.t(:shipping_error)}: The maximum per package weight for the selected service from the selected country is #{max_weight} ounces.")  
+              raise Spree::ShippingError.new("#{I18n.t(:shipping_error)}: The maximum per package weight for the selected service from the selected country is #{max_weight} ounces.")
             end
           end
           weights.flatten.compact.sort
@@ -200,38 +255,11 @@ module Spree
         # or just leave this alone to keep the default behavior.
         # Sample output: [9, 6, 3]
         def convert_package_to_dimensions_array(package)
-          []
-        end
-
-        # Generates an array of Package objects based on the quantities and weights of the variants in the line items
-        def packages(package)
-          units = Spree::ActiveShipping::Config[:units].to_sym
-          packages = []
-          weights = convert_package_to_weights_array(package)
-          max_weight = get_max_weight(package)
-          dimensions = convert_package_to_dimensions_array(package)
-          item_specific_packages = convert_package_to_item_packages_array(package)
-
-          if max_weight <= 0
-            packages << ::ActiveShipping::Package.new(weights.sum, dimensions, :units => units)
+          if package.width && package.height && package.depth
+            [package.width.to_f, package.height.to_f, package.depth.to_f]
           else
-            package_weight = 0
-            weights.each do |content_weight|
-              if package_weight + content_weight <= max_weight
-                package_weight += content_weight
-              else
-                packages << ::ActiveShipping::Package.new(package_weight, dimensions, :units => units)
-                package_weight = content_weight
-              end
-            end
-            packages << ::ActiveShipping::Package.new(package_weight, dimensions, :units => units) if package_weight > 0
+            []
           end
-
-          item_specific_packages.each do |package|
-            packages << ::ActiveShipping::Package.new(package.at(0), [package.at(1), package.at(2), package.at(3)], :units => :imperial)
-          end
-
-          packages
         end
 
         def get_max_weight(package)

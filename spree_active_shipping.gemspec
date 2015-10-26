@@ -21,6 +21,6 @@ Gem::Specification.new do |s|
   s.add_dependency('active_shipping', '~> 1.4.2')
   s.add_development_dependency 'pry'
   s.add_development_dependency 'webmock'
-  s.add_development_dependency 'sass-rails', '~> 4.0.2'
+  s.add_development_dependency 'sass-rails'
   s.add_development_dependency 'simplecov'
 end

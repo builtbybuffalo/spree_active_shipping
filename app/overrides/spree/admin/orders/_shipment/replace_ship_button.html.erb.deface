@@ -1,0 +1,2 @@
+<!-- replace "[data-hook=stock-location] erb:contains('link_to Spree.t(:ship)')" -->
+<%= link_to Spree.t(:ship), admin_order_prepare_shipment_path(@order, shipment), class: "pull-right btn btn-success" %>

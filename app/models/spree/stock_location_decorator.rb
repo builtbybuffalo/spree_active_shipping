@@ -7,4 +7,19 @@ Spree::StockLocation.class_eval do
         errors.add(:state_name, "can't be blank")
     end
   end
+
+  def to_activeshipping
+    ActiveShipping::Location.new(
+      name: address1,
+      company: address1,
+      phone: "111111111111",
+
+      address1: address1,
+      address2: address2,
+      country: country.iso,
+      state: (state ? state.abbr : state_name),
+      city: city,
+      zip: zipcode
+    )
+  end
 end
