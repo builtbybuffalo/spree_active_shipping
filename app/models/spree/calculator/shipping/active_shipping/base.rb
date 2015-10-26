@@ -11,7 +11,7 @@ module Spree
       class Base < ShippingCalculator
         include ActiveShipping
 
-        LineItemWeightPackageStub = Struct.new :country, :content do
+        LineItemWeightPackageStub ||= Struct.new :country, :content do
           def stub_to_self
             self
           end
@@ -90,24 +90,25 @@ module Spree
           item_specific_packages = convert_package_to_item_packages_array(package)
           value = package.to_shipment.item_cost
           currency = package.currency
+          refs = [{ value: "#{package.order.number} / #{package.shipment_number}" }]
 
           if max_weight <= 0
-            packages << ::ActiveShipping::Package.new(weights.sum, dimensions, units: units, value: value, currency: currency)
+            packages << ::ActiveShipping::Package.new(weights.sum, dimensions, units: units, value: value, currency: currency, reference_numbers: refs)
           else
             package_weight = 0
             weights.each do |content_weight|
               if package_weight + content_weight <= max_weight
                 package_weight += content_weight
               else
-                packages << ::ActiveShipping::Package.new(package_weight, dimensions, units: units, value: value, currency: currency)
+                packages << ::ActiveShipping::Package.new(package_weight, dimensions, units: units, value: value, currency: currency, reference_numbers: refs)
                 package_weight = content_weight
               end
             end
-            packages << ::ActiveShipping::Package.new(package_weight, dimensions, units: units, value: value, currency: currency) if package_weight > 0
+            packages << ::ActiveShipping::Package.new(package_weight, dimensions, units: units, value: value, currency: currency, reference_numbers: refs) if package_weight > 0
           end
 
           item_specific_packages.each do |package|
-            packages << ::ActiveShipping::Package.new(package.at(0), [package.at(1), package.at(2), package.at(3)], units: :imperial, value: value, currency: currency)
+            packages << ::ActiveShipping::Package.new(package.at(0), [package.at(1), package.at(2), package.at(3)], units: :imperial, value: value, currency: currency, reference_numbers: refs)
           end
 
           packages

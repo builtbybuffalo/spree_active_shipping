@@ -8,7 +8,8 @@ Spree::Address.class_eval do
       state: (state ? state.abbr : state_name),
       city: city,
       zip: zipcode,
-      phone: phone
+      phone: phone,
+      address_type: :residential
     )
   end
 end

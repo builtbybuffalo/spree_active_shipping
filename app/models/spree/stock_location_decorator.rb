@@ -10,16 +10,15 @@ Spree::StockLocation.class_eval do
 
   def to_activeshipping
     ActiveShipping::Location.new(
-      name: address1,
-      company: address1,
-      phone: "111111111111",
-
+      name: company,
+      company: company,
       address1: address1,
       address2: address2,
       country: country.iso,
       state: (state ? state.abbr : state_name),
       city: city,
-      zip: zipcode
+      zip: zipcode,
+      phone: phone
     )
   end
 end

@@ -1,0 +1,5 @@
+<!-- insert_before "[data-hook=stock_location_address1]" -->
+<div class="form-group">
+	<%= f.label :company, Spree.t(:company) %>
+	<%= f.text_field :company, class: "form-control" %>
+</div>
