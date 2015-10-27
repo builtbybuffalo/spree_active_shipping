@@ -1,0 +1,5 @@
+<!-- insert_bottom "[data-hook=admin_product_form_additional_fields]" -->
+<%= f.field_container :country_of_manufacture, class: ["form-group"] do %>
+	<%= f.label :country_of_manufacture %>
+	<%= f.collection_select :country_of_manufacture, Spree::Country.all, :iso, :name, { include_blank: true }, class: "select2 fullwidth" %>
+<% end %>
