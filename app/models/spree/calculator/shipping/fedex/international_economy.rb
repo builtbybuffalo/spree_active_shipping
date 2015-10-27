@@ -7,6 +7,10 @@ module Spree
         def self.description
           I18n.t("fedex.intl_economy")
         end
+
+        def shipping_options
+          { service_type: "INTERNATIONAL_ECONOMY" }
+        end
       end
     end
   end

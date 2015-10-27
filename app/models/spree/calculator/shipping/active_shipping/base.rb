@@ -28,6 +28,10 @@ module Spree
           self.description
         end
 
+        def shipping_options
+          {}
+        end
+
         def available?(package)
           # helps the available? method determine
           # if rates are avaiable for this service

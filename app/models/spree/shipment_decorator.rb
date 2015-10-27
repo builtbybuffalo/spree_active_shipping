@@ -17,8 +17,9 @@ Spree::Shipment.class_eval do
 
     shipment_packages = shipping_method.calculator.packages(to_package)
     shipment_line_items = shipping_method.calculator.line_items(line_items)
+    options = shipping_method.calculator.shipping_options
 
-    response = carrier.create_shipment(origin, destination, shipment_packages, shipment_line_items, service_type: "GROUND_HOME_DELIVERY")
+    response = carrier.create_shipment(origin, destination, shipment_packages, shipment_line_items, options)
     label = response.labels.first
 
     update_columns tracking: label.tracking_number, label_data: label.img_data

@@ -5,6 +5,10 @@ module Spree
         def self.description
           I18n.t("fedex.saver")
         end
+
+        def shipping_options
+          { service_type: "FEDEX_EXPRESS_SAVER" }
+        end
       end
     end
   end

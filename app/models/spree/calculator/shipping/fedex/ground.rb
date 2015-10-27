@@ -7,6 +7,10 @@ module Spree
         def self.description
           I18n.t("fedex.ground")
         end
+
+        def shipping_options
+          { service_type: "FEDEX_GROUND" }
+        end
       end
     end
   end
