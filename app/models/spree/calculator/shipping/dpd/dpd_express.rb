@@ -7,7 +7,7 @@ module Spree
         preference :base_cost, :decimal, default: 0
         preference :subtotal_threshold, :decimal, default: 0
         preference :increased_cost, :decimal, default: 0
-        preference :currency, :string, ->{ Spree::Config[:currency] }
+        preference :currency, :string, default: ->{ Spree::Config[:currency] }
 
         def self.description
           "DPD Express"
@@ -21,6 +21,17 @@ module Spree
           else
             preferred_base_cost
           end
+        end
+
+        def carrier
+          carrier_details = {
+            :username => Spree::ActiveShipping::Config[:dpd_username],
+            :password => Spree::ActiveShipping::Config[:dpd_password],
+            :account_id => Spree::ActiveShipping::Config[:dpd_account_id],
+            :test => Spree::ActiveShipping::Config[:test_mode]
+          }
+
+          carrier = ::ActiveShipping::DPD.new(carrier_details)
         end
       end
     end

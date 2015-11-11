@@ -40,11 +40,6 @@
 </div>
 
 <%= form_for @shipment, url: admin_order_dispatch_shipment_path(@order, @shipment), method: :post do |f| %>
-	<%= f.field_container :weight, class: ["form-group"] do %>
-		<%= f.label :weight %>
-		<%= f.number_field :weight, class: "form-control" %>
-		<%= error_message_on :shipment, :weight %>
-	<% end %>
 	<%= f.field_container :width, class: ["form-group"] do %>
 		<%= f.label :width %>
 		<%= f.number_field :width, class: "form-control" %>

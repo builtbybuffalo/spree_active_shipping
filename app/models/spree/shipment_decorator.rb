@@ -1,7 +1,7 @@
 Spree::Shipment.class_eval do
-  attr_accessor :weight, :width, :height, :depth
+  attr_accessor :width, :height, :depth
 
-  validates :weight, :width, :height, :depth, presence: true, on: :dispatch
+  validates :width, :height, :depth, presence: true, on: :dispatch
 
   def carrier
     return unless shipping_method.calculator.is_a? Spree::Calculator::Shipping::ActiveShipping::Base

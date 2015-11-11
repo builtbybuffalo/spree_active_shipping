@@ -6,7 +6,8 @@ Spree::Admin::OrdersController.class_eval do
 
     if @shipment.valid? :dispatch
       @shipment.send_to_carrier
-      raise @shipment.inspect
+      @shipment.ship!
+      redirect_to edit_admin_order_path(@shipment.order)
     else
       redirect_to :back
     end

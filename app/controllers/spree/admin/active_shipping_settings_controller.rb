@@ -5,7 +5,8 @@ class Spree::Admin::ActiveShippingSettingsController < Spree::Admin::BaseControl
     @preferences_FedEx = [:fedex_login, :fedex_password, :fedex_account, :fedex_key]
     @preferences_USPS = [:usps_login, :usps_commercial_base, :usps_commercial_plus]
     @preferences_CanadaPost = [:canada_post_login]
-    @preferences_GeneralSettings = [:units, :unit_multiplier, :default_weight, :handling_fee, 
+    @preferences_DPD = [:dpd_username, :dpd_password, :dpd_account_id]
+    @preferences_GeneralSettings = [:units, :unit_multiplier, :default_weight, :handling_fee,
       :max_weight_per_package, :test_mode]
 
     @config = Spree::ActiveShippingConfiguration.new
