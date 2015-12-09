@@ -4,6 +4,8 @@ module Spree
   module Calculator::Shipping
     module Fedex
       class Base < Spree::Calculator::Shipping::ActiveShipping::Base
+        include Spree::ThresholdPricing
+
         def carrier
           carrier_details = {
             :key => Spree::ActiveShipping::Config[:fedex_key],
