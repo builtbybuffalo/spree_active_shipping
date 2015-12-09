@@ -6,6 +6,8 @@ module Spree
       class DpdExpress < Spree::Calculator::Shipping::ActiveShipping::Base
         include Spree::ThresholdPricing
 
+        preference :network_code, :string, nil
+
         def self.description
           "DPD Express"
         end
@@ -19,6 +21,14 @@ module Spree
           }
 
           carrier = ::ActiveShipping::DPD.new(carrier_details)
+        end
+
+        def available?(_)
+          preferred_network_code.present? ? super : false
+        end
+
+        def shipping_options
+          { network_code: preferred_network_code }
         end
       end
     end
