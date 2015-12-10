@@ -123,7 +123,7 @@ module Spree
             package_stub = LineItemWeightPackageStub.new li.order.ship_address.country, li
             weight = convert_package_to_weights_array(package_stub).first
 
-            ::ActiveShipping::PackageItem.new(li.name, weight, li.amount, li.quantity, country_of_manufacture: li.variant.product.country_of_manufacture)
+            ::ActiveShipping::PackageItem.new(li.name, weight, li.amount, li.quantity, country_of_manufacture: li.variant.product.country_of_manufacture, harmonised_number: li.product.harmonised_number)
           end
         end
 
