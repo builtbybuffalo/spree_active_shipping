@@ -6,6 +6,8 @@ module Spree
       class Base < Spree::Calculator::Shipping::ActiveShipping::Base
         include Spree::ThresholdPricing
 
+        preference :signature_option, :string, default: "SERVICE_DEFAULT"
+
         def carrier
           carrier_details = {
             :key => Spree::ActiveShipping::Config[:fedex_key],

@@ -18,6 +18,7 @@ Spree::Shipment.class_eval do
     shipment_packages = shipping_method.calculator.packages(to_package)
     shipment_line_items = shipping_method.calculator.line_items(line_items)
     options = shipping_method.calculator.shipping_options
+    options.merge!(preferences: shipping_method.calculator.preferences)
 
     response = carrier.create_shipment(origin, destination, shipment_packages, shipment_line_items, options)
     label = response.labels.first
