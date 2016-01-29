@@ -96,23 +96,24 @@ module Spree
           currency = package.currency
           refs = [{ value: "#{package.order.number} / #{package.shipment_number}" }]
 
+
           if max_weight <= 0
-            packages << ::ActiveShipping::Package.new(weights.sum, dimensions, units: units, value: value, currency: currency, reference_numbers: refs)
+            packages << ::ActiveShipping::Package.new(weights.sum, dimensions, units: units, value: value, currency: currency, reference_numbers: refs, email: package.order.email)
           else
             package_weight = 0
             weights.each do |content_weight|
               if package_weight + content_weight <= max_weight
                 package_weight += content_weight
               else
-                packages << ::ActiveShipping::Package.new(package_weight, dimensions, units: units, value: value, currency: currency, reference_numbers: refs)
+                packages << ::ActiveShipping::Package.new(package_weight, dimensions, units: units, value: value, currency: currency, reference_numbers: refs, email: package.order.email)
                 package_weight = content_weight
               end
             end
-            packages << ::ActiveShipping::Package.new(package_weight, dimensions, units: units, value: value, currency: currency, reference_numbers: refs) if package_weight > 0
+            packages << ::ActiveShipping::Package.new(package_weight, dimensions, units: units, value: value, currency: currency, reference_numbers: refs, email: package.order.email) if package_weight > 0
           end
 
           item_specific_packages.each do |package|
-            packages << ::ActiveShipping::Package.new(package.at(0), [package.at(1), package.at(2), package.at(3)], units: :imperial, value: value, currency: currency, reference_numbers: refs)
+            packages << ::ActiveShipping::Package.new(package.at(0), [package.at(1), package.at(2), package.at(3)], units: :imperial, value: value, currency: currency, reference_numbers: refs, email: package.order.email)
           end
 
           packages
