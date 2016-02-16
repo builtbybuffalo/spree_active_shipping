@@ -10,13 +10,7 @@ module Spree
     end
 
     def compute_package(package)
-      amount = total(package.contents)
-
-      if preferred_subtotal_threshold > 0 && amount > preferred_subtotal_threshold
-        preferred_increased_cost
-      else
-        preferred_base_cost
-      end
+      preferred_base_cost
     end
   end
 end
