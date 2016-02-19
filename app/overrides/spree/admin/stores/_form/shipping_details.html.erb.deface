@@ -1,0 +1,44 @@
+<!-- insert_after "[data-hook=admin_store_form_fields_right]" -->
+<div class="col-md-12">
+	<div class="row">
+		<div class="col-md-6">
+			<h4>DPD Settings</h4>
+
+			<%= field_container :preferred_dpd_username, class: ["form-group"] do %>
+				<%= f.label :preferred_dpd_username, "Username" %>
+				<%= f.text_field :preferred_dpd_username, class: "form-control" %>
+			<% end %>
+
+			<%= field_container :preferred_dpd_password, class: ["form-group"] do %>
+				<%= f.label :preferred_dpd_password, "Password" %>
+				<%= f.text_field :preferred_dpd_password, class: "form-control" %>
+			<% end %>
+
+			<%= field_container :preferred_dpd_account_id, class: ["form-group"] do %>
+				<%= f.label :preferred_dpd_account_id, "Account ID" %>
+				<%= f.text_field :preferred_dpd_account_id, class: "form-control" %>
+			<% end %>
+		</div>
+
+		<div class="col-md-6">
+			<h4>Fedex Settings</h4>
+
+			<%= field_container :preferred_fedex_login, class: ["form-group"] do %>
+				<%= f.label :preferred_fedex_login %>
+				<%= f.text_field :preferred_fedex_login, class: "form-control" %>
+			<% end %>
+			<%= field_container :preferred_fedex_password, class: ["form-group"] do %>
+				<%= f.label :preferred_fedex_password %>
+				<%= f.text_field :preferred_fedex_password, class: "form-control" %>
+			<% end %>
+			<%= field_container :preferred_fedex_account, class: ["form-group"] do %>
+				<%= f.label :preferred_fedex_account %>
+				<%= f.text_field :preferred_fedex_account, class: "form-control" %>
+			<% end %>
+			<%= field_container :preferred_fedex_key, class: ["form-group"] do %>
+				<%= f.label :preferred_fedex_key %>
+				<%= f.text_field :preferred_fedex_key, class: "form-control" %>
+			<% end %>
+		</div>
+	</div>
+</div>

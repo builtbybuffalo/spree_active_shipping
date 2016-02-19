@@ -6,13 +6,18 @@ Spree::Shipment.class_eval do
   def carrier
     return unless shipping_method.calculator.is_a? Spree::Calculator::Shipping::ActiveShipping::Base
 
-    carrier = shipping_method.calculator.carrier
+    case shipping_method.calculator
+    when Spree::Calculator::Shipping::Fedex::Base, Spree::Calculator::Shipping::Dpd::DpdExpress
+      shipping_method.calculator.carrier(self)
+    else
+      shipping_method.calculator.carrier
+    end
   end
 
   def send_to_carrier
     return unless carrier
 
-    origin = stock_location.to_activeshipping
+    origin = order.store.to_activeshipping(stock_location)
     destination = order.ship_address.to_activeshipping
 
     shipment_packages = shipping_method.calculator.packages(to_package)
