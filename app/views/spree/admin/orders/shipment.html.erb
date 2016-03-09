@@ -42,17 +42,17 @@
 <%= form_for @shipment, url: admin_order_dispatch_shipment_path(@order, @shipment), method: :post do |f| %>
 	<%= f.field_container :width, class: ["form-group"] do %>
 		<%= f.label :width %>
-		<%= f.number_field :width, class: "form-control" %>
+		<%= f.number_field :width, class: "form-control", value: 1 %>
 		<%= error_message_on :shipment, :width %>
 	<% end %>
 	<%= f.field_container :height, class: ["form-group"] do %>
 		<%= f.label :height %>
-		<%= f.number_field :height, class: "form-control" %>
+		<%= f.number_field :height, class: "form-control", value: 1 %>
 		<%= error_message_on :shipment, :height %>
 	<% end %>
 	<%= f.field_container :depth, class: ["form-group"] do %>
 		<%= f.label :depth %>
-		<%= f.number_field :depth, class: "form-control" %>
+		<%= f.number_field :depth, class: "form-control", value: 1 %>
 		<%= error_message_on :shipment, :depth %>
 	<% end %>
 	<div class="form-actions">
