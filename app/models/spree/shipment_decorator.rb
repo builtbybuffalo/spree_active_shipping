@@ -27,8 +27,13 @@ Spree::Shipment.class_eval do
 
     response = carrier.create_shipment(origin, destination, shipment_packages, shipment_line_items, options)
     label = response.labels.first
+    tracking_number = label.tracking_number
 
-    update_columns tracking: label.tracking_number, label_data: label.img_data
+    if shipping_method.calculator.is_a?(Spree::Calculator::Shipping::Fedex::SmartPost)
+      tracking_number = "92#{tracking_number}"
+    end
+
+    update_columns tracking: tracking_number, label_data: label.img_data
   end
 
   alias_method :old_to_package, :to_package
