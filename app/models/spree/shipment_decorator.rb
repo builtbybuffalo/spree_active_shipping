@@ -21,7 +21,7 @@ Spree::Shipment.class_eval do
     destination = order.ship_address.to_activeshipping
 
     shipment_packages = shipping_method.calculator.packages(to_package)
-    shipment_line_items = shipping_method.calculator.line_items(line_items)
+    shipment_line_items = shipping_method.calculator.line_items(self)
     options = shipping_method.calculator.shipping_options
     options.merge!(preferences: shipping_method.calculator.preferences)
 
