@@ -1,5 +1,5 @@
 <!-- replace "[data-hook=stock-location] erb:contains('link_to Spree.t(:ship)')" -->
-<% if shipment.shipping_method.calculator.is_a? Spree::Calculator::Shipping::Fedex::Base %>
+<% if shipment.shipping_method.nil? || shipment.shipping_method.calculator.is_a?(Spree::Calculator::Shipping::Fedex::Base) %>
 	<%= link_to Spree.t(:ship), 'javascript:;', class: 'ship pull-right btn btn-success', data: { 'shipment-number' => shipment.number } %>
 <% else %>
 	<%= link_to Spree.t(:ship), admin_order_prepare_shipment_path(@order, shipment), class: "pull-right btn btn-success" %>
