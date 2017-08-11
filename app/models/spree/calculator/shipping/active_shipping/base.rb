@@ -124,14 +124,14 @@ module Spree
           splits = order_discount.split(shipment.order.item_count)
 
           shipment.order.line_items.map do |li|
-            discount = splits.shift(li.quantity).sum
+            discount = splits.shift(li.quantity).last
 
             next nil unless shipment.line_items.include?(li)
 
             package_stub = LineItemWeightPackageStub.new li.order.ship_address.country, li
             weight = convert_package_to_weights_array(package_stub).first
 
-            ::ActiveShipping::PackageItem.new(li.name, weight, li.amount - discount.amount, li.quantity, country_of_manufacture: li.variant.product.country_of_manufacture, harmonised_number: li.product.harmonised_number)
+            ::ActiveShipping::PackageItem.new(li.name, weight, li.price - discount.amount, li.quantity, country_of_manufacture: li.variant.product.country_of_manufacture, harmonised_number: li.product.harmonised_number)
           end.compact
         end
 
